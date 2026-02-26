@@ -1,0 +1,321 @@
+---
+import { portfolioConfig } from "../config/portfolio";
+
+const github = portfolioConfig.github;
+const username = github?.username;
+const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
+---
+
+{github?.enabled && username && (
+  <section 
+    class="px-4 py-4" 
+    id="github-contributions"
+    data-username={username}
+    data-cache-ttl={CACHE_TTL_MS}
+  >
+    <header class="flex items-baseline justify-between mb-3">
+      <h2 class="text-sm font-medium tracking-tight">GitHub activity</h2>
+      <a
+        href={`https://github.com/${username}`}
+        target="_blank"
+        rel="noreferrer"
+        class="text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+      >
+        @{username}
+      </a>
+    </header>
+
+    <div class="rounded-md border border-dashed border-border/70 px-3 py-4">
+      <div id="github-loading" class="flex min-h-[120px] items-center justify-center text-[11px] text-muted-foreground">
+        Loading GitHub activity...
+      </div>
+      <div id="github-error" class="hidden flex min-h-[120px] items-center justify-center text-[11px] text-muted-foreground">
+        GitHub activity is currently unavailable. It may be a temporary API issue.
+      </div>
+      <div id="github-graph" class="hidden">
+        <div class="max-w-full overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative">
+          <svg id="github-svg" class="block overflow-visible"></svg>
+          <div id="github-tooltip" class="absolute z-50 hidden overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md whitespace-nowrap pointer-events-none"></div>
+        </div>
+        <div class="mt-3 flex items-center justify-between text-[11px] text-muted-foreground">
+          <span id="github-total"></span>
+          <div class="ml-auto flex items-center gap-[3px]">
+            <span class="mr-1 text-muted-foreground">Less</span>
+            <div id="github-legend" class="flex items-center gap-[3px]"></div>
+            <span class="ml-1 text-muted-foreground">More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<script>
+  type Activity = {
+    date: string;
+    count: number;
+    level: number;
+  };
+
+  type CacheData = {
+    activities: Activity[];
+    total: number;
+    fetchedAt: number;
+  };
+
+  const WEEK_START = 0;
+  const BLOCK_MARGIN = 4;
+  const BLOCK_RADIUS = 2;
+  const BLOCK_SIZE = 10;
+  const FONT_SIZE = 11;
+  const LABEL_MARGIN = 8;
+  const MAX_LEVEL = 4;
+
+  const DEFAULT_MONTH_LABELS = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const parseISODate = (value: string) => new Date(value);
+  const formatDateOnly = (date: Date) => date.toISOString().slice(0, 10);
+  const getDay = (date: Date) => date.getUTCDay();
+  const getMonth = (date: Date) => date.getUTCMonth();
+  const getYear = (date: Date) => date.getUTCFullYear();
+
+  const differenceInCalendarDays = (later: Date, earlier: Date) => {
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const start = Date.UTC(earlier.getUTCFullYear(), earlier.getUTCMonth(), earlier.getUTCDate());
+    const end = Date.UTC(later.getUTCFullYear(), later.getUTCMonth(), later.getUTCDate());
+    return Math.round((end - start) / msPerDay);
+  };
+
+  const subWeeks = (date: Date, amount: number) => {
+    const result = new Date(date);
+    result.setUTCDate(result.getUTCDate() - amount * 7);
+    return result;
+  };
+
+  const nextDay = (date: Date, weekDay: number) => {
+    const result = new Date(date);
+    for (let i = 0; i < 7; i++) {
+      result.setUTCDate(result.getUTCDate() + 1);
+      if (result.getUTCDay() === weekDay) return result;
+    }
+    return result;
+  };
+
+  const eachDayOfInterval = (start: Date, end: Date) => {
+    const days: Date[] = [];
+    let current = new Date(start);
+    while (current <= end) {
+      days.push(new Date(current));
+      current.setUTCDate(current.getUTCDate() + 1);
+    }
+    return days;
+  };
+
+  const fillHoles = (input: Activity[]): Activity[] => {
+    if (input.length === 0) return [];
+    const sorted = [...input].sort((a, b) => a.date.localeCompare(b.date));
+    const calendar = new Map<string, Activity>(input.map((a) => [a.date, a]));
+    const firstActivity = sorted[0];
+    const lastActivity = sorted[sorted.length - 1];
+    return eachDayOfInterval(parseISODate(firstActivity.date), parseISODate(lastActivity.date)).map((day) => {
+      const date = formatDateOnly(day);
+      const found = calendar.get(date);
+      return found ?? { date, count: 0, level: 0 };
+    });
+  };
+
+  const groupByWeeks = (input: Activity[], weekStart: number = WEEK_START) => {
+    if (input.length === 0) return [];
+    const normalized = fillHoles(input);
+    const firstActivity = normalized[0];
+    const firstDate = parseISODate(firstActivity.date);
+    const firstCalendarDate = getDay(firstDate) === weekStart ? firstDate : subWeeks(nextDay(firstDate, weekStart), 1);
+    const paddingDays = differenceInCalendarDays(firstDate, firstCalendarDate);
+    const padded: (Activity | undefined)[] = [...new Array(paddingDays).fill(undefined), ...normalized];
+    const numberOfWeeks = Math.ceil(padded.length / 7);
+    return new Array(numberOfWeeks).fill(undefined).map((_, weekIndex) => padded.slice(weekIndex * 7, weekIndex * 7 + 7));
+  };
+
+  const getMonthLabels = (weeks: (Activity | undefined)[][]) => {
+    const labels: { weekIndex: number; label: string }[] = [];
+    weeks.forEach((week, weekIndex) => {
+      const firstActivity = week.find((a) => a !== undefined);
+      if (!firstActivity) return;
+      const month = DEFAULT_MONTH_LABELS[getMonth(parseISODate(firstActivity.date))];
+      if (!month) return;
+      const prev = labels[labels.length - 1];
+      if (weekIndex === 0 || !prev || prev.label !== month) {
+        labels.push({ weekIndex, label: month });
+      }
+    });
+    const minWeeks = 3;
+    return labels.filter(({ weekIndex }, index, all) => {
+      if (index === 0) return all[1] && all[1].weekIndex - weekIndex >= minWeeks;
+      if (index === all.length - 1) return weeks.slice(weekIndex).length >= minWeeks;
+      return true;
+    });
+  };
+
+  const levelClass = (level: number) => {
+    if (level <= 0) return "fill-transparent";
+    return `fill-contrib-${level}`;
+  };
+
+  const getContribColor = (level: number) => {
+    return `var(--contrib-${level})`;
+  };
+
+  const getCacheKey = (username: string) => `github-contributions-${username}`;
+  const getCached = (username: string): CacheData | null => {
+    try {
+      const cached = localStorage.getItem(getCacheKey(username));
+      if (cached) return JSON.parse(cached);
+    } catch {}
+    return null;
+  };
+  const setCached = (username: string, data: CacheData) => {
+    try {
+      localStorage.setItem(getCacheKey(username), JSON.stringify(data));
+    } catch {}
+  };
+
+  const renderGraph = (activities: Activity[], total: number) => {
+    const weeks = groupByWeeks(activities, WEEK_START);
+    const labelHeight = FONT_SIZE + LABEL_MARGIN;
+    const width = weeks.length > 0 ? weeks.length * (BLOCK_SIZE + BLOCK_MARGIN) - BLOCK_MARGIN : 0;
+    const height = labelHeight + (BLOCK_SIZE + BLOCK_MARGIN) * 7 - BLOCK_MARGIN + 8;
+    const monthLabels = weeks.length > 0 ? getMonthLabels(weeks) : [];
+    const year = activities.length > 0 ? getYear(parseISODate(activities[0].date)) : new Date().getUTCFullYear();
+
+    const svg = document.getElementById("github-svg") as unknown as SVGSVGElement;
+    svg.setAttribute("height", String(height));
+    svg.setAttribute("width", String(width));
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+    let svgContent = "";
+
+    if (monthLabels.length > 0) {
+      svgContent += `<g class="fill-muted-foreground text-[10px]">`;
+      monthLabels.forEach(({ label, weekIndex }) => {
+        svgContent += `<text dominant-baseline="hanging" x="${(BLOCK_SIZE + BLOCK_MARGIN) * weekIndex}" y="${LABEL_MARGIN}">${label}</text>`;
+      });
+      svgContent += `</g>`;
+    }
+
+    weeks.forEach((week, weekIndex) => {
+      week.forEach((activity, dayIndex) => {
+        if (!activity) return;
+        const fillColor = getContribColor(activity.level);
+        svgContent += `<rect 
+          style="fill: ${fillColor}" 
+          class="cursor-pointer" 
+          data-count="${activity.count}" 
+          data-date="${activity.date}" 
+          data-level="${activity.level}" 
+          height="${BLOCK_SIZE}" 
+          rx="${BLOCK_RADIUS}" 
+          ry="${BLOCK_RADIUS}" 
+          width="${BLOCK_SIZE}" 
+          x="${(BLOCK_SIZE + BLOCK_MARGIN) * weekIndex}" 
+          y="${labelHeight + (BLOCK_SIZE + BLOCK_MARGIN) * dayIndex}"
+        ></rect>`;
+      });
+    });
+
+    svg.innerHTML = svgContent;
+
+    const tooltip = document.getElementById("github-tooltip");
+    const svgElement = document.getElementById("github-svg");
+
+    svgElement?.querySelectorAll("rect[data-date]").forEach((rect) => {
+      rect.addEventListener("mouseenter", (e) => {
+        if (!tooltip) return;
+        const target = e.target as SVGRectElement;
+        const count = target.getAttribute("data-count");
+        const date = target.getAttribute("data-date");
+        tooltip.textContent = `${count} contributions on ${date}`;
+        tooltip.classList.remove("hidden");
+
+        const rectBounds = target.getBoundingClientRect();
+        const containerBounds = svgElement?.parentElement?.getBoundingClientRect();
+        if (containerBounds) {
+          tooltip.style.left = `${rectBounds.left - containerBounds.left + rectBounds.width / 2}px`;
+          tooltip.style.top = `${rectBounds.top - containerBounds.top - 40}px`;
+          tooltip.style.transform = "translateX(-50%)";
+        }
+      });
+
+      rect.addEventListener("mouseleave", () => {
+        tooltip?.classList.add("hidden");
+      });
+    });
+
+    const totalEl = document.getElementById("github-total");
+    if (totalEl) totalEl.textContent = `${total} contributions in ${year}`;
+
+    const legendEl = document.getElementById("github-legend");
+    if (legendEl) {
+      let legendHtml = "";
+      for (let level = 0; level <= MAX_LEVEL; level++) {
+        const fillColor = getContribColor(level);
+        legendHtml += `<svg height="${BLOCK_SIZE}" width="${BLOCK_SIZE}"><title>${level} contributions</title><rect style="fill: ${fillColor}" height="${BLOCK_SIZE}" rx="${BLOCK_RADIUS}" ry="${BLOCK_RADIUS}" width="${BLOCK_SIZE}"/></svg>`;
+      }
+      legendEl.innerHTML = legendHtml;
+    }
+  };
+
+  const init = async () => {
+    const container = document.getElementById("github-contributions");
+    if (!container) return;
+
+    const username = container.getAttribute("data-username");
+    const cacheTtl = parseInt(container.getAttribute("data-cache-ttl") || "0", 10);
+    if (!username) return;
+
+    const loadingEl = document.getElementById("github-loading");
+    const errorEl = document.getElementById("github-error");
+    const graphEl = document.getElementById("github-graph");
+
+    const cached = getCached(username);
+    const now = Date.now();
+
+    if (cached && now - cached.fetchedAt < cacheTtl) {
+      renderGraph(cached.activities, cached.total);
+      loadingEl?.classList.add("hidden");
+      graphEl?.classList.remove("hidden");
+      return;
+    }
+
+    if (cached) {
+      renderGraph(cached.activities, cached.total);
+    }
+
+    try {
+      const res = await fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`);
+      if (!res.ok) throw new Error("Failed to fetch");
+
+      const json = await res.json();
+      const activities = (json.contributions ?? []) as Activity[];
+      const total = typeof json.total === "number" ? json.total : activities.reduce((sum, a) => sum + a.count, 0);
+
+      const cacheData: CacheData = { activities, total, fetchedAt: now };
+      setCached(username, cacheData);
+
+      renderGraph(activities, total);
+    } catch {
+      if (!cached) {
+        loadingEl?.classList.add("hidden");
+        errorEl?.classList.remove("hidden");
+        return;
+      }
+    }
+
+    loadingEl?.classList.add("hidden");
+    graphEl?.classList.remove("hidden");
+  };
+
+  init();
+</script>

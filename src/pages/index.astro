@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Announcement from "@/components/Announcement.astro";
+import Profile from "@/components/Profile.astro";
+import GithubContribution from "@/components/GithubContribution.astro";
+import Experience from "@/components/Experience.astro";
+import Projects from "@/components/Projects.astro";
+import SectionDivider from "@/components/SectionDivider.astro";	
+import Footer from "@/components/Footer.astro";
+import { portfolioConfig } from "@/config/portfolio";
+---
+
+<BaseLayout title={`${portfolioConfig.name} — Portfolio`}>
+  <main class="min-h-screen flex flex-col">
+    <div class="relative flex-1 flex flex-col">
+      <div class="pointer-events-none fixed inset-y-0 left-0 hidden md:flex">
+        <div class="w-px border-r border-dashed border-border/60" />
+      </div>
+      <div class="pointer-events-none fixed inset-y-0 right-0 hidden md:flex">
+        <div class="w-px border-l border-dashed border-border/60" />
+      </div>
+
+      <div class="m-auto flex w-full max-w-[700px] flex-col border-x border-dashed border-border pb-0 pt-4">
+        <Announcement />
+        <Profile />
+        <SectionDivider />
+        <GithubContribution />
+        <SectionDivider />
+        <Experience />
+        <SectionDivider />
+        <Projects />
+        <SectionDivider />
+        <Footer />
+      </div>
+    </div>
+  </main>
+</BaseLayout>

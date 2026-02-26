@@ -1,0 +1,39 @@
+---
+import { portfolioConfig } from "@/config/portfolio";
+
+const { experience } = portfolioConfig;
+---
+
+{experience?.length && (
+  <section class="px-4 py-4">
+    <h2 class="text-sm font-medium tracking-tight mb-3">Experience</h2>
+    <div class="flex flex-col gap-3 text-xs">
+      {experience.map((item) => (
+        <article class="border-l border-dashed border-border/70 pl-3">
+          <header class="flex flex-col gap-0.5">
+            <h3 class="text-xs font-medium">
+              {item.role}
+              {item.company && (
+                <span class="text-foreground">
+                  {" at "}
+                  {item.company}
+                </span>
+              )}
+            </h3>
+            {item.period && (
+              <p class="text-[11px] text-muted-foreground">
+                {item.period}
+              </p>
+            )}
+          </header>
+          {item.summary && (
+            <p class="mt-1 text-[11px] text-muted-foreground">
+              {item.summary}
+            </p>
+          )}
+        </article>
+      ))}
+    </div>
+  </section>
+) }
+

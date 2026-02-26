@@ -1,0 +1,95 @@
+---
+import { portfolioConfig } from "@/config/portfolio";
+import Button from "./bearnie/button/Button.astro";
+
+const { announcement } = portfolioConfig;
+---
+
+{announcement?.enabled && (
+  <section class="px-4 py-2 text-[11px] font-mono text-muted-foreground border-b border-dashed border-border/70 flex items-center justify-between gap-4 bg-secondary/10">
+    <span class="uppercase tracking-[0.12em] text-xs">
+      {announcement.label}
+    </span>
+    <div class="flex items-center gap-2">
+      {announcement.href && (
+        <a
+          href={announcement.href}
+          class="text-foreground underline underline-offset-4 decoration-dotted hover:decoration-solid transition-colors"
+        >
+          {announcement.linkLabel}
+        </a>
+      )}
+      <Button
+        iconOnly
+        variant="ghost"
+        size="sm"
+        id="theme-toggle"
+        class="rounded-full"
+        aria-label="Toggle theme"
+      >
+        <svg
+          class="sun-icon w-4 h-4"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+        <svg
+          class="moon-icon w-4 h-4 hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+      </button>
+    </div>
+  </section>
+)}
+
+<script>
+  const toggle = document.getElementById("theme-toggle");
+  const sunIcon = toggle?.querySelector(".sun-icon");
+  const moonIcon = toggle?.querySelector(".moon-icon");
+
+  const updateIcons = () => {
+    const isDark = document.documentElement.classList.contains("dark");
+    if (sunIcon && moonIcon) {
+      sunIcon.classList.toggle("hidden", isDark);
+      moonIcon.classList.toggle("hidden", !isDark);
+    }
+  };
+
+  updateIcons();
+
+  toggle?.addEventListener("click", () => {
+    if (localStorage.theme === "dark") {
+      localStorage.theme = "light";
+      document.documentElement.classList.remove("dark");
+    } else {
+      localStorage.theme = "dark";
+      document.documentElement.classList.add("dark");
+    }
+    updateIcons();
+  });
+</script>
+  </section>
+
+
