@@ -1,7 +1,19 @@
 ---
 import { portfolioConfig } from "@/config/portfolio";
 
-const { name, role, location, socials } = portfolioConfig;
+const { name, role, location, socials, bio } = portfolioConfig;
+
+function parseBio(text: string) {
+  const parts = text.split(/(~[^~]+~)/g);
+  return parts.map((part) => {
+    if (part.startsWith("~") && part.endsWith("~")) {
+      return { type: "highlight", content: part.slice(1, -1) };
+    }
+    return { type: "text", content: part };
+  });
+}
+
+const bioParts = parseBio(bio);
 ---
 
 <section class="flex w-full ">
@@ -11,9 +23,9 @@ const { name, role, location, socials } = portfolioConfig;
         <h1 class="font-medium text-xl tracking-tight">
           {name}
         </h1>
-        <p class="text-xs text-muted-foreground">
+        <p class="text-xs text-muted-foreground ">
           {role}
-          {location && ` • ${location}`}
+         <span class="underline">{`/${location}`}</span>
         </p>
       </div>
 
@@ -41,9 +53,12 @@ const { name, role, location, socials } = portfolioConfig;
       </nav>
     </div>
 
-    <div class="px-4 py-3 text-sm text-muted-foreground">
-      {portfolioConfig.bio}
+    <div class="px-4 py-3 text-sm text-muted-foreground leading-relaxed">
+      {bioParts.map((part) => (
+        part.type === "highlight" 
+          ? <span class="text-foreground underline underline-offset-4 hover:decoration-solid transition-colors">{part.content}</span>
+          : part.content
+      ))}
     </div>
   </div>
 </section>
-
