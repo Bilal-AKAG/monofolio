@@ -34,9 +34,11 @@ const {
       }
     </script>
   </head>
-  <body class="min-h-screen mx-auto border-dashed border-x bg-background text-foreground antialiased font-mono max-w-[700px]">
+  <body class="min-h-screen mx-auto border-dashed border-x bg-background text-foreground antialiased font-mono max-w-[700px] flex flex-col">
     <Navigation />
-    <slot />
+    <main class="flex-1">
+      <slot />
+    </main>
     <Footer />
   </body>
 </html>

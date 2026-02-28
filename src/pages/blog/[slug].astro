@@ -22,29 +22,27 @@ const formattedDate = post.data.pubDate.toLocaleDateString("en-US", {
 ---
 
 <BaseLayout title={`${post.data.title} — bearnie`}>
-  <main class="min-h-screen flex flex-col w-full border-x border-dashed border-border">
-    <article class="px-6 py-13">
-      <a href="/blog" class="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mb-10 group">
-      <ArrowLeft size={10} class="rotate-45" />
-        [Back]
-      </a>
-      <header class="mb-8">
-        <p class="text-xs text-muted-foreground mb-2">{formattedDate}</p>
-        <h1 class="text-2xl font-semibold mb-4 text-foreground">{post.data.title}</h1>
-        <p class="text-foreground/70">{post.data.description}</p>
-      </header>
-      <div class="prose prose-sm max-w-none 
-        prose-headings:font-medium prose-headings:text-foreground prose-headings:mb-3 prose-headings:mt-6
-        prose-p:text-foreground/80 prose-p:leading-relaxed
-        prose-a:text-foreground prose-a:underline prose-a:underline-offset-4 prose-a:decoration-dotted hover:prose-a:decoration-solid
-        prose-strong:text-foreground
-        prose-ul:text-foreground/80 prose-ol:text-foreground/80
-        prose-li:text-foreground/80 prose-li:marker:text-foreground/60
-        prose-hr:border-border
-        prose-blockquote:border-l-2 prose-blockquote:border-primary/50 prose-blockquote:pl-4 prose-blockquote:text-foreground/70 prose-blockquote:not-italic
-        dark:prose-invert">
-        <Content />
-      </div>
-    </article>
-  </main>
+  <article class="px-6 py-12 flex-1">
+    <a href="/blog" class="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6 group">
+      <ArrowLeft size={10} class="rotate-45"/>
+       [Back]
+    </a>
+    <header class="mb-8">
+      <p class="text-xs text-muted-foreground mb-2">{formattedDate}</p>
+      <h1 class="text-2xl font-semibold mb-4 text-foreground">{post.data.title}</h1>
+      <p class="text-foreground/70">{post.data.description}</p>
+    </header>
+    <div class="prose prose-sm max-w-none 
+      prose-headings:font-medium prose-headings:text-foreground prose-headings:mb-3 prose-headings:mt-6
+      prose-p:text-foreground/80 prose-p:leading-relaxed
+      prose-a:text-foreground prose-a:underline prose-a:underline-offset-4 prose-a:decoration-dotted hover:prose-a:decoration-solid
+      prose-strong:text-foreground
+      prose-ul:text-foreground/80 prose-ol:text-foreground/80
+      prose-li:text-foreground/80 prose-li:marker:text-foreground/60
+      prose-hr:border-border
+      prose-blockquote:border-l-2 prose-blockquote:border-primary/50 prose-blockquote:pl-4 prose-blockquote:text-foreground/70 prose-blockquote:not-italic
+      dark:prose-invert">
+      <Content />
+    </div>
+  </article>
 </BaseLayout>

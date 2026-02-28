@@ -9,13 +9,13 @@ import { portfolioConfig } from "@/config/portfolio";
 ---
 
 <BaseLayout title={`${portfolioConfig.name} — Portfolio`}>
-  <main class="min-h-screen mx-auto flex w-full flex-col border-b border-dashed ">
-        <Profile />
-        <SectionDivider />
-        <GithubContribution />
-        <SectionDivider />
-        <Experience />
-        <SectionDivider />
-        <Projects />
-  </main>
+  <div class="flex-1">
+    <Profile />
+    <SectionDivider />
+    <GithubContribution />
+    <SectionDivider />
+    <Experience />
+    <SectionDivider />
+    <Projects />
+  </div>
 </BaseLayout>
