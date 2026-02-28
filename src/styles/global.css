@@ -341,3 +341,30 @@
 	animation: thunder-zap 0.5s ease-in-out infinite;
 	transform-origin: center;
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: oklch(0.7 0 0);
+	border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: oklch(0.5 0 0);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+	background: oklch(0.4 0 0);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+	background: oklch(0.6 0 0);
+}

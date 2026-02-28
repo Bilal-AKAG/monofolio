@@ -26,10 +26,10 @@ export const portfolioConfig = {
   /* ------------------------------------------
   PERSONAL INFO
   ------------------------------------------ */
-  name: "Alex Chen",           // Your full name (displayed prominently)
-  shortName: "Alex",          // Short name for mobile/small spaces
-  role: "Full Stack Developer", // Your job title
-  location: "/San Francisco", // Location with / prefix (e.g., /Berlin, /Tokyo)
+  name: "Sarah Mitchell",           // Your full name (displayed prominently)
+  shortName: "Sarah",             // Short name for mobile/small spaces
+  role: "Senior Software Engineer", // Your job title
+  location: "Seattle",           // Location with / prefix (e.g., /Berlin, /Tokyo)
 
   /* ------------------------------------------
   BIO / ABOUT ME
@@ -37,7 +37,7 @@ export const portfolioConfig = {
   Use ~text~ syntax to highlight words with underline style.
   Example: "I'm a ~full-stack developer~ who loves ~building~"
   ------------------------------------------ */
-  bio: "I'm a ~full-stack developer~ specializing in React, TypeScript, and Node.js. I build ~minimal, performant~ web applications and love crafting ~great developer experiences~. When not coding, I'm hiking trails or contributing to open-source.",
+  bio: "I'm a ~senior software engineer~ with 6+ years of experience building scalable web applications. I specialize in ~distributed systems~ and ~cloud architecture~, with a focus on ~developer productivity~. Outside work, I mentor junior developers and contribute to open-source.",
 
   /* ------------------------------------------
   SOCIAL LINKS
@@ -47,9 +47,9 @@ export const portfolioConfig = {
   ------------------------------------------ */
   socials: {
     github: "https://github.com/Bilal-AKAG",
-    x: "https://x.com/alexchen_dev",
-    linkedin: "https://www.linkedin.com/in/alexchen-dev",
-    email: "mailto:alex@example.com",
+    x: "https://x.com/sarahmitchell",
+    linkedin: "https://www.linkedin.com/in/sarahmitchell-dev",
+    email: "mailto:sarah@example.com",
   },
 
   /* ------------------------------------------
@@ -68,16 +68,22 @@ export const portfolioConfig = {
   ------------------------------------------ */
   experience: [
     {
-      company: "Vercel",                    // Company name
-      role: "Senior Frontend Engineer",    // Job title
-      period: "2023 — Present",           // Time period (any format works)
-      summary: "Working on Next.js and the frontend infrastructure team to improve developer experience.",
+      company: "Amazon Web Services",         // Company name
+      role: "Senior Software Engineer",       // Job title
+      period: "2022 — Present",              // Time period (any format works)
+      summary: "Leading the development of serverless compute platforms, serving 100M+ requests daily.",
     },
     {
-      company: "Stripe",
+      company: "Netflix",
+      role: "Software Engineer",
+      period: "2019 — 2022",
+      summary: "Built microservices for content recommendation engine, improving latency by 40%.",
+    },
+    {
+      company: "Startup",
       role: "Full Stack Developer",
-      period: "2021 — 2023",
-      summary: "Built internal developer tools and improved CI/CD pipelines for faster deployments.",
+      period: "2017 — 2019",
+      summary: "Developed MVP from scratch, scaled from 0 to 10K users within 6 months.",
     },
     // Add more experience entries as needed
   ],
@@ -89,16 +95,22 @@ export const portfolioConfig = {
   ------------------------------------------ */
   projects: [
     {
-      title: "OpenCode",                               // Project name
-      description: "An AI-powered code editor built for the modern developer workflow.",  // Brief description
-      link: "https://opencode.ai",                     // Project URL
-      stack: ["Astro", "TypeScript", "LLM"],           // Tech stack (array of strings)
+      title: "Lambda Cold Start Optimizer",                              // Project name
+      description: "Tool for reducing AWS Lambda cold start times by 60% through intelligent pre-warming strategies.",  // Brief description
+      link: "https://github.com",                          // Project URL
+      stack: ["Rust", "AWS Lambda", "Python"],                    // Tech stack (array of strings)
     },
     {
-      title: "Tailwind CSS",
-      description: "A utility-first CSS framework for rapid UI development.",
-      link: "https://tailwindcss.com",
-      stack: ["CSS", "PostCSS", "Node.js"],
+      title: "Service Mesh Dashboard",
+      description: "Internal observability dashboard for monitoring microservices health and inter-service communication.",
+      link: "https://github.com",
+      stack: ["React", "Go", "Prometheus"],
+    },
+    {
+      title: "CI Pipeline Accelerator",
+      description: "Build optimization tool that reduced CI/CD pipeline execution time by 45% through caching strategies.",
+      link: "https://github.com",
+      stack: ["TypeScript", "Docker", "GitHub Actions"],
     },
     // Add more projects as needed
   ],
