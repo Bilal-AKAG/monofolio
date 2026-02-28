@@ -10,6 +10,7 @@
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
     "@lucide/astro": "^0.575.0",
+    "@vercel/analytics": "^1.6.1",
     "astro": "^5.16.15",
     "clsx": "^2.1.1",
     "lucide": "^0.575.0",

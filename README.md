@@ -2,6 +2,8 @@
 
 A minimal, monochromatic, beautiful portfolio template built with Astro, Tailwind CSS, and Bearnie components.
 
+![Portfolio Demo](/demo.png)
+
 ## Features
 
 - **Minimal Design** - Clean, monochromatic aesthetic that puts your content first
