@@ -1,0 +1,104 @@
+---
+import Button from "./bearnie/button/Button.astro";
+import { portfolioConfig } from "@/config/portfolio";
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+];
+const {shortName} = portfolioConfig;
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="sticky top-0 z-50 w-full border-y border-dashed border-border/70 bg-background/80 backdrop-blur-sm">
+  <div class="max-w-[700px] mx-auto flex items-center justify-between h-14 px-4">
+    <a href="/" class="flex items-center gap-1.5 text-sm font-semibold hover:text-muted-foreground transition-colors">
+      <svg class="w-5 h-5 thunder-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="thunder-bolt" d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="hidden sm:inline">{shortName}</span>
+    </a>
+    <div class="flex items-center gap-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            "px-3 py-1.5 text-sm rounded-md transition-colors underline-offset-4",
+            currentPath === item.href
+              ? "underline text-foreground"
+              : "text-muted-foreground hover:text-foreground hover:underline",
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+      <Button
+        id="theme-toggle"
+        variant="ghost"
+        size="sm"
+        class="rounded-full"
+        iconOnly
+        aria-label="Toggle theme"
+      >
+        <svg
+          class="sun-icon w-4 h-4"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+        <svg
+          class="moon-icon w-4 h-4 hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+      </Button>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const toggle = document.getElementById("theme-toggle");
+  const sunIcon = toggle?.querySelector(".sun-icon");
+  const moonIcon = toggle?.querySelector(".moon-icon");
+
+  const updateIcons = () => {
+    const isDark = document.documentElement.classList.contains("dark");
+    if (sunIcon && moonIcon) {
+      sunIcon.classList.toggle("hidden", isDark);
+      moonIcon.classList.toggle("hidden", !isDark);
+    }
+  };
+
+  updateIcons();
+
+  toggle?.addEventListener("click", () => {
+    if (localStorage.theme === "dark") {
+      localStorage.theme = "light";
+      document.documentElement.classList.remove("dark");
+    } else {
+      localStorage.theme = "dark";
+      document.documentElement.classList.add("dark");
+    }
+    updateIcons();
+  });
+</script>

@@ -1,10 +1,107 @@
 @import 'tailwindcss';
 @plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-Light.woff2') format('woff2');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-Medium.woff2') format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-SemiBold.woff2') format('woff2');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-Bold.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-ExtraBold.woff2') format('woff2');
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-Italic.woff2') format('woff2');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-LightItalic.woff2') format('woff2');
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-MediumItalic.woff2') format('woff2');
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-SemiBoldItalic.woff2') format('woff2');
+	font-weight: 600;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-BoldItalic.woff2') format('woff2');
+	font-weight: 700;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ioskeley Mono';
+	src: url('/fonts/IoskeleyMono-ExtraBoldItalic.woff2') format('woff2');
+	font-weight: 800;
+	font-style: italic;
+	font-display: swap;
+}
 
 @theme {
 	/* Typography */
 	--font-sans: Inter, sans-serif;
-	--font-mono: Geist Mono, monospace;
+	--font-mono: 'Ioskeley Mono', monospace;
 
 	/* Border Radius - Base: 0.625rem (10px) */
 	--radius-sm: calc(var(--radius) - 4px);
@@ -176,4 +273,71 @@
 /* Base styles */
 * {
 	border-color: var(--border);
+}
+
+@keyframes spin-slow {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes spin-reverse {
+	from {
+		transform: rotate(360deg);
+	}
+	to {
+		transform: rotate(0deg);
+	}
+}
+
+.animate-spin-slow {
+	animation: spin-slow 20s linear infinite;
+}
+
+.animate-spin-reverse {
+	animation: spin-reverse 15s linear infinite;
+}
+
+@keyframes thunder-flash {
+	0%, 100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.7;
+		transform: scale(0.95);
+	}
+}
+
+@keyframes thunder-zap {
+	0% {
+		transform: translateY(0) skewX(0);
+		opacity: 1;
+	}
+	25% {
+		transform: translateY(-2px) skewX(-5deg);
+	}
+	50% {
+		transform: translateY(1px) skewX(5deg);
+		opacity: 0.8;
+	}
+	75% {
+		transform: translateY(-1px) skewX(-3deg);
+	}
+	100% {
+		transform: translateY(0) skewX(0);
+		opacity: 1;
+	}
+}
+
+.thunder-icon {
+	animation: thunder-flash 3s ease-in-out infinite;
+}
+
+.thunder-bolt {
+	animation: thunder-zap 0.5s ease-in-out infinite;
+	transform-origin: center;
 }

@@ -1,20 +1,21 @@
 export const portfolioConfig = {
-  name: "Your Name",
+	name: "Alex Chen",
+  shortName:"Alex",
   role: "Full Stack Developer",
-  location: "Based in Somewhere",
+  location: "Based in San Francisco",
   welcome: "Welcome to my portfolio",
   announcement: {
     enabled: true,
-    label: "Available for new opportunities",
+    label: "Not available for opportunities",
     linkLabel: "Email me",
-    href: "mailto:you@example.com",
+    href: "mailto:alex@example.com",
   },
-  bio: "I build minimal, focused interfaces and thoughtful web experiences.",
+  bio: "I'm a full-stack developer based in San Francisco with a passion for building minimal, performant, and accessible web applications. I specialize in React, TypeScript, and Node.js, with experience working at scale. When I'm not coding, you'll find me contributing to open-source projects, exploring new technologies, or hiking the California trails.",
   socials: {
     github: "https://github.com/Bilal-AKAG",
-    x: "https://x.com/your-handle",
-    linkedin: "https://www.linkedin.com/in/your-handle",
-    email: "mailto:you@example.com",
+    x: "https://x.com/alexchen_dev",
+    linkedin: "https://www.linkedin.com/in/alexchen-dev",
+    email: "mailto:alex@example.com",
   },
   github: {
     enabled: true,
@@ -22,24 +23,33 @@ export const portfolioConfig = {
   },
   experience: [
     {
-      company: "Company Name",
-      role: "Senior Developer",
+      company: "Vercel",
+      role: "Senior Frontend Engineer",
       period: "2023 — Present",
-      summary: "Working on modern web applications with a focus on DX and UX.",
+      summary: "Working on Next.js and the frontend infrastructure team to improve developer experience.",
+    },
+    {
+      company: "Stripe",
+      role: "Full Stack Developer",
+      period: "2021 — 2023",
+      summary: "Built internal developer tools and improved CI/CD pipelines for faster deployments.",
     },
   ],
   projects: [
     {
-      title: "Project Name",
-      description: "Short description of what this project does and why it exists.",
-      link: "https://project.link",
-      stack: ["Astro", "Bearnie", "Tailwind"],
+      title: "OpenCode",
+      description: "An AI-powered code editor built for the modern developer workflow.",
+      link: "https://opencode.ai",
+      stack: ["Astro", "TypeScript", "LLM"],
+    },
+    {
+      title: "Tailwind CSS",
+      description: "A utility-first CSS framework for rapid UI development.",
+      link: "https://tailwindcss.com",
+      stack: ["CSS", "PostCSS", "Node.js"],
     },
   ],
-  analytics: {
-    provider: "loglib",
-    id: "",
-  },
+ 
 } as const;
 
 export type PortfolioConfig = typeof portfolioConfig;

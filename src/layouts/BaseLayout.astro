@@ -1,5 +1,7 @@
 ---
 import "@/styles/global.css";
+import Navigation from "@/components/Navigation.astro";
+import Footer from "@/components/Footer.astro";
 
 interface Props {
   title?: string;
@@ -32,7 +34,9 @@ const {
       }
     </script>
   </head>
-  <body class="min-h-screen bg-background text-foreground antialiased font-mono">
+  <body class="min-h-screen mx-auto border-dashed border-x bg-background text-foreground antialiased font-mono max-w-[700px]">
+    <Navigation />
     <slot />
+    <Footer />
   </body>
 </html>

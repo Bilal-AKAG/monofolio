@@ -25,7 +25,7 @@ const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
       </a>
     </header>
 
-    <div class="rounded-md border border-dashed border-border/70 px-3 py-4">
+    <div class=" border border-dashed border-border/70 px-3 py-4">
       <div id="github-loading" class="flex min-h-[120px] items-center justify-center text-[11px] text-muted-foreground">
         Loading GitHub activity...
       </div>
@@ -35,7 +35,7 @@ const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
       <div id="github-graph" class="hidden">
         <div class="max-w-full overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative">
           <svg id="github-svg" class="block overflow-visible"></svg>
-          <div id="github-tooltip" class="absolute z-50 hidden overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md whitespace-nowrap pointer-events-none"></div>
+          <div id="github-tooltip" class="absolute z-50 hidden overflow-hidden border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md whitespace-nowrap pointer-events-none"></div>
         </div>
         <div class="mt-3 flex items-center justify-between text-[11px] text-muted-foreground">
           <span id="github-total"></span>
@@ -65,7 +65,7 @@ const CACHE_TTL_MS = 1000 * 60 * 60 * 24;
 
   const WEEK_START = 0;
   const BLOCK_MARGIN = 4;
-  const BLOCK_RADIUS = 2;
+  const BLOCK_RADIUS = 0;
   const BLOCK_SIZE = 10;
   const FONT_SIZE = 11;
   const LABEL_MARGIN = 8;
