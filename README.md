@@ -1,4 +1,4 @@
-<img width="4800" height="2700" alt="screenshot-studio-1772309282527" src="https://github.com/user-attachments/assets/6149f475-1d24-4e85-98dc-fbc9f8428f4f" /># Portfolio Template
+# Portfolio Template
 
 A minimal, monochromatic, beautiful portfolio template built with Astro, Tailwind CSS, and Bearnie components.
 
